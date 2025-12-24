@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Mioshie Zenshu</title>
+    <style>
+        :root {
+            --bg-overlay: rgba(245, 247, 250, 0.85);
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --primary: #5d737e;
+            /* Muted Nordic Blue */
+            --primary-hover: #4a5d68;
+            --error: #c0392b;
+            --border: #e0e0e0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('photo/museum.jpg');
+            background-size: cover;
+            background-position: center;
+            color: var(--text-main);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-overlay);
+            z-index: 1;
+            backdrop-filter: blur(2px);
+            /* Subtle blur for the background */
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 2;
+            background: var(--card-bg);
+            padding: 3.5rem 3rem;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            /* Very subtle shadow */
+            /* Minimalist - no heavy borders or radius */
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            /* Slightly rounded, almost square */
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 2.5rem 0;
+            color: var(--text-main);
+            font-size: 1.6rem;
+            font-weight: 300;
+            /* Light weight for elegance */
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 14px 0;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            border-radius: 0;
+            background: transparent;
+            font-size: 1.1rem;
+            color: var(--text-main);
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="password"]:focus {
+            border-bottom-color: var(--primary);
+        }
+
+        input[type="password"]::placeholder {
+            color: #bdc3c7;
+            font-weight: 300;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 2px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.99);
+        }
+
+        .error-msg {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 1.5rem;
+            min-height: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-weight: 400;
+        }
+
+        .error-msg.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <div class="login-card">
+        <h1>Mioshie Zenshu</h1>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter access code" required autofocus>
+            </div>
+            <button type="submit">Sign In</button>
+            <div id="errorMsg" class="error-msg">Incorrect password</div>
+        </form>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (password === '567') {
+                // Fade out effect
+                document.querySelector('.login-card').style.opacity = '0';
+                document.querySelector('.login-card').style.transform = 'translateY(10px) scale(0.98)';
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 300);
+            } else {
+                errorMsg.classList.add('visible');
+                const input = document.getElementById('password');
+                input.value = '';
+                input.focus();
+                // Shake effect for wrong password
+                input.style.borderBottomColor = '#c0392b';
+                setTimeout(() => {
+                    input.style.borderBottomColor = '';
+                }, 500);
+            }
+        }
+    </script>
+</body>
+
+</html>

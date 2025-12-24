@@ -1,0 +1,16 @@
+﻿
+A {text-decoration:none } 
+A:link    {COLOR: #0033cc;}
+A:visited {COLOR: #0066ff;}
+A:active  {COLOR: red; }
+A:hover   {text-decoration:underline;COLOR: #ff9900;}
+
+BODY{
+  scrollbar-face-color:#E6F6D6; /*スクロールバー本体の色*/
+  scrollbar-3dlight-color: #E6F6D6; /*スクロールバーの左側（下）の影*/
+  scrollbar-arrow-color: #e0e8c8; /*矢印の色*/
+  scrollbar-darkshadow-color: #ffffff; /*スクロールバー右側（下）の影*/
+}
+BODY, TH, TD { font-family: 'ＭＳ Ｐゴシック,Osaka－等幅'; }
+
+

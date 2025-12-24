@@ -1,0 +1,18 @@
+﻿
+A {text-decoration:none } 
+A:link    {COLOR: #0033cc;}
+A:visited {COLOR: #0066ff;}
+A:active  {COLOR: red; }
+A:hover   {text-decoration:underline;COLOR: #ff9900;}
+
+BODY{
+  scrollbar-face-color:#E6F6D6; /*･ｹ･ｯ･悅ｼ･・ﾐ｡ｼﾋﾜﾂﾎ､ﾎｿｧ*/
+  scrollbar-3dlight-color: #E6F6D6; /*･ｹ･ｯ･悅ｼ･・ﾐ｡ｼ､ﾎｺｸﾂｦ｡ﾊｲｼ｡ﾋ､ﾎｱﾆ*/
+  scrollbar-arrow-color: #e0e8c8; /*ﾌﾎｿｧ*/
+  scrollbar-darkshadow-color: #ffffff; /*･ｹ･ｯ･悅ｼ･・ﾐ｡ｼｱｦﾂｦ｡ﾊｲｼ｡ﾋ､ﾎｱﾆ*/
+}
+BODY, TH, TD { font-family: '｣ﾍ｣ﾓ ｣ﾐ･ｴ･ｷ･ﾃ･ｯ,Osaka｡ﾝﾅ'; }
+BODY, TH, TD { line-height: 160%; }
+P.honbun { text-align: justify; }
+
+

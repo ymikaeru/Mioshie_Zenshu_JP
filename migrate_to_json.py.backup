@@ -1,0 +1,247 @@
+import os
+import json
+import re
+from bs4 import BeautifulSoup
+
+ROOT_DIR = "/Users/michael/Documents/Ensinamentos/Mioshie_Zenshu_JP"
+SEARCH_DIRS = ["search1", "search2"]
+OUTPUT_FILE = "data.js" # Changed to .js for easier local loading
+
+# Rich Tagging Dictionary - Comprehensive categorization
+KEYWORD_CATEGORIES = {
+    # Specific Diseases (very detailed)
+    "結核": ["結核", "肺結核", "咳", "血痰"],
+    "癌": ["癌", "がん", "ガン", "腫瘍"],
+    "胃腸病": ["胃", "腸", "胃病", "腸炎", "胃腸"],
+    "心臓病": ["心臓", "心臓病", "動悸"],
+    "肝臓病": ["肝臓", "肝臓病", "黄疸"],
+    "腎臓病": ["腎臓", "腎臓病"],
+    "糖尿病": ["糖尿", "糖尿病"],
+    "風邪": ["風邪", "感冒", "咽喉"],
+    "肺炎": ["肺炎", "肺病"],
+    "神経痛": ["神経痛", "神経"],
+    "リウマチ": ["リウマチ", "関節炎"],
+    "喘息": ["喘息", "ぜんそく"],
+    "盲腸": ["盲腸", "虫垂炎"],
+    "脳溢血": ["脳溢血", "脳卒中"],
+    "眼病": ["目", "眼", "視力", "盲"],
+    "耳病": ["耳", "難聴", "耳鳴"],
+    "歯病": ["歯", "歯痛", "虫歯"],
+    "皮膚病": ["皮膚", "湿疹", "かゆみ"],
+    
+    # Treatment Methods & Healing
+    "浄霊": ["浄霊", "お光", "手かざし"],
+    "治療法": ["治療", "療法", "全快", "回復"],
+    "健康法": ["健康", "健康法", "予防"],
+    "奇蹟": ["奇蹟", "奇跡", "御守護"],
+    
+    # Causes of Disease
+    "薬毒": ["薬", "薬毒", "医薬", "注射"],
+    "毒素": ["毒素", "毒", "老廃物"],
+    "曇り": ["曇り", "霊的曇り"],
+    "浄化作用": ["浄化", "浄化作用"],
+    
+    # Focal Points (治療部位)
+    "頭部": ["頭", "頭部", "脳", "延髄"],
+    "首・肩": ["首", "肩", "肩こり"],
+    "胸部": ["胸", "肺", "心臓"],
+    "腹部": ["腹", "お腹", "胃", "腸"],
+    "背中・腰": ["背中", "腰", "尾てい骨"],
+    "手・腕": ["手", "腕", "指"],
+    "足・脚": ["足", "脚", "膝"],
+    
+    # Spiritual & Divine
+    "神様": ["神", "観音", "龍神", "メシヤ", "主神"],
+    "仏教": ["仏", "釈迦", "キリスト"],
+    "霊界": ["霊界", "幽界", "霊"],
+    "天国・地獄": ["天国", "地獄", "極楽"],
+    "先祖霊": ["先祖", "供養", "霊憑"],
+    "因縁": ["因縁", "罪", "穢れ", "カルマ"],
+    "信仰": ["信仰", "祈り", "参拝", "御神体"],
+    
+    # Society & Culture
+    "政治": ["政治", "政府", "国家"],
+    "経済": ["経済", "金銭", "商売"],
+    "戦争・平和": ["戦争", "平和"],
+    "日本": ["日本", "大和"],
+    "世界": ["世界", "アメリカ", "外国"],
+    
+    # Family & Life
+    "家庭": ["家庭", "家族"],
+    "夫婦": ["夫婦", "結婚", "離婚"],
+    "親子": ["親子", "教育", "子供"],
+    "生活": ["生活", "幸福", "貧困"],
+    
+    # Art & Beauty
+    "芸術": ["芸術", "美術", "美"],
+    "文化": ["文化", "文学", "歌"],
+    "生け花": ["花", "生け花"],
+    
+    # Nature & Agriculture
+    "農業": ["農業", "農法", "農作物"],
+    "自然": ["自然", "土", "肥料"],
+    "食": ["食", "米", "野菜", "栄養"],
+    
+    # Core Philosophy & Truth
+    "真理": ["真理", "真"],
+    "善悪": ["善", "悪", "正義"],
+    "愛": ["愛", "慈悲"],
+    "調和": ["調和", "順序", "バランス"],
+    "火水土": ["火", "水", "土"],
+    "昼夜": ["昼", "夜", "昼の世界", "夜の世界"],
+    "五六七": ["五六七", "ミロク", "地上天国"],
+    
+    # Content Difficulty Levels
+    "基礎": ["初めて", "入門", "基本", "簡単"],
+    "中級": ["一般", "普通"],
+    "上級": ["高度", "深い", "専門", "詳細"],
+    
+    # Publication Status
+    "公式出版": ["光", "栄光", "地上天国", "文明の創造"],
+    "御垂示録": ["御垂示", "垂示録"],
+    "未公開": ["未発表", "秘蔵"],
+    
+    # Medical & Doctors
+    "医学": ["医学", "医師", "病院", "医者"],
+    "手術": ["手術", "外科"],
+    "診断": ["診断", "検査", "レントゲン"]
+}
+
+def extract_tags(text):
+    tags = set()
+    for category, keywords in KEYWORD_CATEGORIES.items():
+        for keyword in keywords:
+            if keyword in text:
+                tags.add(category)
+                break # Add category once if any keyword matches
+    return list(tags)
+
+def extract_data_from_html(filepath):
+    try:
+        with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+            content = f.read()
+        
+        soup = BeautifulSoup(content, 'html.parser')
+        
+        # Extract Title
+        title = ""
+        font_titles = soup.find_all('font', size=re.compile(r'[4-6]'))
+        for ft in font_titles:
+            text = ft.get_text(strip=True)
+            if len(text) > 1:
+                title = text
+                break
+        
+        if not title:
+             strongs = soup.find_all('strong')
+             for s in strongs:
+                 text = s.get_text(strip=True)
+                 if len(text) > 2:
+                     title = text
+                     break
+
+        # Extract Main Content
+        blockquote = soup.find('blockquote')
+        body_text = ""
+        source_text = ""
+        date_text = ""
+
+        if blockquote:
+            # Get text but also check first <p> tag separately
+            body_text = blockquote.get_text(separator="\n", strip=True)
+            
+            # Try to find first paragraph which often contains source/date
+            first_p = blockquote.find('p')
+            if first_p:
+                p_text = first_p.get_text(separator="\n", strip=True)
+                lines = p_text.split('\n')
+                
+                # Look through first few lines for source/date pattern
+                for line in lines[:5]:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    
+                    # Pattern: 『source』date
+                    if '『' in line and '』' in line and '昭和' in line:
+                        # Extract source
+                        source_match = re.search(r'『([^』]+)』', line)
+                        if source_match:
+                            source_text = source_match.group(1)
+                        
+                        # Extract date  
+                        date_match = re.search(r'昭和\d+\(\d+\)年\d+月\d+日発行', line)
+                        if date_match:
+                            date_text = date_match.group()
+                        else:
+                            # Try simpler pattern
+                            date_match = re.search(r'昭和\d+.*?発行', line)
+                            if date_match:
+                                date_text = date_match.group()
+                        break
+                    # Just date without source
+                    elif '昭和' in line and ('発行' in line or '年' in line):
+                        date_match = re.search(r'昭和\d+\(\d+\)年\d+月\d+日発行', line)
+                        if date_match:
+                            date_text = date_match.group()
+                        else:
+                            date_match = re.search(r'昭和\d+.*?発行', line)
+                            if date_match:
+                                date_text = date_match.group()
+                        break
+            
+        else:
+            if soup.body:
+                body_text = soup.body.get_text(separator="\n", strip=True)
+
+        if not title:
+            title = os.path.basename(filepath)
+
+        # Generate Tags based on title and content
+        full_text = title + " " + body_text
+        tags = extract_tags(full_text)
+        
+        return {
+            "title": title,
+            "content": body_text,
+            "source": source_text, # Placeholder if specific parsing is too complex
+            "date": date_text,
+            "path": os.path.relpath(filepath, ROOT_DIR),
+            "tags": sorted(list(set(tags))) # Deduplicate and sort
+        }
+
+    except Exception as e:
+        # print(f"Error processing {filepath}: {e}")
+        return None
+
+def main():
+    all_data = []
+    
+    for search_dir in SEARCH_DIRS:
+        full_search_dir = os.path.join(ROOT_DIR, search_dir)
+        if not os.path.exists(full_search_dir):
+            print(f"Directory not found: {full_search_dir}")
+            continue
+
+        for root, dirs, files in os.walk(full_search_dir):
+            for file in files:
+                if file.lower().endswith('.html') or file.lower().endswith('.htm'):
+                    filepath = os.path.join(root, file)
+                    data = extract_data_from_html(filepath)
+                    if data:
+                        data['id'] = os.path.splitext(file)[0]
+                        all_data.append(data)
+    
+    output_path = os.path.join(ROOT_DIR, OUTPUT_FILE)
+    
+    # Write as specific JS variable assignment
+    json_str = json.dumps(all_data, ensure_ascii=False, indent=2)
+    js_content = f"const MioshieData = {json_str};"
+    
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(js_content)
+    
+    print(f"Extracted {len(all_data)} items to {output_path}")
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Search - Mioshie Zenshu</title>
+    <style>
+        :root {
+            --primary: #4a5d4e;
+            --accent: #80a085;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .search-controls {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            min-width: 250px;
+        }
+
+        .advanced-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .filter-select {
+            padding: 0.6rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: white;
+            cursor: pointer;
+            min-width: 180px;
+        }
+
+        .date-filters {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .date-input {
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            width: 140px;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: auto;
+        }
+
+        .view-btn {
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .view-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .view-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .filter-chip {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background: white;
+            font-size: 0.85rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .filter-chip:hover {
+            border-color: var(--accent);
+            color: var(--primary);
+        }
+
+        .filter-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            /* Softer shadow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            min-height: 180px;
+            /* Taller cards */
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            margin: 0 0 1.5rem 0;
+            color: var(--primary);
+            font-size: 1.25rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* .card-snippet removed */
+
+        .card-meta {
+            margin-top: auto;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-pill {
+            background: #f4f6f8;
+            /* Softer gray */
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+        }
+
+        .tag-pill:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Timeline View */
+        .timeline-container {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent), var(--primary));
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .timeline-date {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .timeline-spacer {
+            width: 50%;
+        }
+
+        .results-grid.hidden {
+            display: none;
+        }
+
+        .timeline-container.hidden {
+            display: none;
+        }
+
+        /* Statistics Dashboard */
+        .stats-dashboard {
+            margin-bottom: 3rem;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #e8965e;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .chart-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .chart-filter {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Bar Chart for Chronological Evolution */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 250px;
+            padding: 1rem 0;
+        }
+
+        .bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bar {
+            width: 100%;
+            background: linear-gradient(to top, #6b9080, #7fa897);
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .bar-wrapper:hover .bar {
+            background: linear-gradient(to top, var(--primary), var(--accent));
+            transform: scaleY(1.05);
+        }
+
+        .bar-label {
+            font-size: 0.7rem;
+            color: #999;
+            margin-top: 0.5rem;
+            writing-mode: horizontal-tb;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: #666;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .bar-wrapper:hover .bar-value {
+            opacity: 1;
+        }
+
+        /* Category Distribution */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .category-item:hover {
+            background: #f8f9fa;
+        }
+
+        .category-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .category-info {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-name {
+            font-size: 0.9rem;
+            color: #2c3e50;
+        }
+
+        .category-count {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .category-bar-bg {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .category-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            width: 100%;
+            max-width: 100%;
+            height: 100vh;
+            max-height: 100vh;
+            border-radius: 0;
+            box-shadow: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 2rem 2.5rem 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 0 0 1rem 0;
+            line-height: 1.5;
+            font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+        }
+
+        .modal-metadata {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-meta-item {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .modal-meta-label {
+            font-weight: 600;
+            color: #999;
+        }
+
+        .modal-meta-value {
+            color: #555;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: #f5f5f5;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #e0e0e0;
+            transform: rotate(90deg);
+        }
+
+        .modal-content {
+            padding: 3rem 15%;
+            overflow-y: auto;
+            line-height: 2.2;
+            font-size: 1.1rem;
+            color: #333;
+            font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+        }
+
+        .modal-content p {
+            margin: 1.8rem 0;
+            text-align: justify;
+            text-indent: 1em;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-content blockquote {
+            border-left: 4px solid var(--accent);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: #f9fbf9;
+            font-style: italic;
+        }
+
+        .modal-content h3,
+        .modal-content h4 {
+            color: var(--primary);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        #result-count {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Advanced Search</h1>
+        <a href="home.html" class="back-link">Return to Home</a>
+    </header>
+
+    <div class="container">
+        <div class="search-controls">
+            <div class="search-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
+                <input type="text" id="searchInput" class="search-input" placeholder="検索..."
+                    style="padding-right: 80px; width: 100%;">
+                <span id="searchCount"
+                    style="position: absolute; right: 15px; color: #888; font-size: 0.85rem; pointer-events: none;"></span>
+            </div>
+
+            <div class="advanced-filters">
+                <select id="categoryFilter" class="filter-select">
+                    <option value="">全てのカテゴリー</option>
+                    <optgroup label="健康・医療">
+                        <option value="disease_detail">病気・症状</option>
+                        <option value="treatment">治療・健康法</option>
+                        <option value="medicine_specific">医療・薬剤</option>
+                        <option value="body_parts">身体部位</option>
+                    </optgroup>
+                    <optgroup label="霊的・神様">
+                        <option value="divine">神様・信仰</option>
+                        <option value="spiritual_detail">霊的・霊界</option>
+                        <option value="karma">因縁・法則</option>
+                    </optgroup>
+                    <optgroup label="真理・社会">
+                        <option value="truth">真理・教え</option>
+                        <option value="society">社会・生活</option>
+                        <option value="family">家庭</option>
+                        <option value="eras">時代・時期</option>
+                    </optgroup>
+                    <optgroup label="文化・自然・他">
+                        <option value="figures">人物</option>
+                        <option value="locations">場所</option>
+                        <option value="food">食・嗜好品</option>
+                        <option value="art_detail">芸術・文化</option>
+                        <option value="nature_detail">自然・農業</option>
+                    </optgroup>
+                </select>
+
+                <select id="periodFilter" class="filter-select">
+                    <option value="">全ての期間</option>
+                    <optgroup label="昭和年代">
+                        <option value="showa11">昭和11年</option>
+                        <option value="showa12">昭和12年</option>
+                        <option value="showa13">昭和13年</option>
+                        <option value="showa14">昭和14年</option>
+                        <option value="showa15">昭和15年</option>
+                        <option value="showa16">昭和16年</option>
+                        <option value="showa17">昭和17年</option>
+                        <option value="showa18">昭和18年</option>
+                        <option value="showa19">昭和19年</option>
+                        <option value="showa20">昭和20年</option>
+                        <option value="showa21">昭和21年</option>
+                        <option value="showa22">昭和22年</option>
+                        <option value="showa23">昭和23年</option>
+                        <option value="showa24">昭和24年</option>
+                        <option value="showa25">昭和25年</option>
+                        <option value="showa26">昭和26年</option>
+                        <option value="showa27">昭和27年</option>
+                        <option value="showa28">昭和28年</option>
+                        <option value="showa29">昭和29年</option>
+                        <option value="showa30">昭和30年</option>
+                        <option value="showa31">昭和31年</option>
+                        <option value="showa32">昭和32年</option>
+                        <option value="showa33">昭和33年</option>
+                        <option value="showa34">昭和34年</option>
+                        <option value="showa35">昭和35年</option>
+                    </optgroup>
+                    <option value="unknown">日付不明</option>
+                </select>
+
+                <select id="sortOrder" class="filter-select">
+                    <option value="relevance">並び順: 関連性</option>
+                    <option value="date-desc">並び順: 日付（新→古）</option>
+                    <option value="date-asc">並び順: 日付（古→新）</option>
+                    <option value="title">並び順: タイトル（あ→ん）</option>
+                </select>
+
+            </div>
+
+            <div id="filterContainer" class="filter-container" style="display: none;">
+                <!-- Filter chips populated via JS -->
+            </div>
+        </div>
+
+        <div id="result-count"></div>
+        <div id="resultsGrid" class="results-grid">
+            <div class="loading">Loading data...</div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">Title</h2>
+                <div class="modal-metadata">
+                    <div class="modal-meta-item">
+                        <span class="modal-meta-label">出典:</span>
+                        <span class="modal-meta-value" id="modalSource">—</span>
+                    </div>
+                </div>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-content" id="modalBody">
+                <!-- Content here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        // allData and categoryTagMap are loaded from data.js
+        const grid = document.getElementById('resultsGrid');
+        const timelineView = document.getElementById('timelineView');
+        const searchInput = document.getElementById('searchInput');
+        const filterContainer = document.getElementById('filterContainer');
+        const resultCount = document.getElementById('result-count');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const periodFilter = document.getElementById('periodFilter');
+        const sortOrder = document.getElementById('sortOrder');
+
+        // State for active filters
+        const activeTags = new Set();
+        let currentView = 'grid'; // 'grid' or 'timeline'
+
+        // Store tag order preferences per item
+        const tagOrderPreferences = new Map();
+
+        // Category tag mapping
+        // categoryTagMap is now loaded from data.js
+
+        // Initialize with data loaded from data.js
+        try {
+            if (typeof allData !== 'undefined') {
+                // allData is already loaded
+                initializeFilters();
+                renderResults(allData.slice(0, 50));
+                const loading = document.querySelector('.loading');
+                if (loading) loading.remove();
+            } else {
+                throw new Error("allData not found");
+            }
+        } catch (err) {
+            grid.innerHTML = '<div class="loading">Error loading data. Please ensure data.js is present.</div>';
+            console.error(err);
+        }
+
+        function initializeFilters(category = '') {
+            filterContainer.innerHTML = '';
+
+            // Determine which tags to show
+            let tagsToShow = new Set();
+
+            if (category && categoryTagMap[category]) {
+                // Show only tags for selected category
+                categoryTagMap[category].forEach(tag => tagsToShow.add(tag));
+            } else {
+                // Show all unique tags from the data
+                allData.forEach(item => {
+                    if (item.tags && Array.isArray(item.tags)) {
+                        item.tags.forEach(tag => tagsToShow.add(tag));
+                    }
+                });
+            }
+
+            // Create filter chips
+            Array.from(tagsToShow).sort().forEach(tag => {
+                const chip = document.createElement('div');
+                chip.className = 'filter-chip';
+                chip.textContent = tag;
+                chip.onclick = () => toggleFilter(tag, chip);
+
+                // Preserve active state if tag was already selected
+                if (activeTags.has(tag)) {
+                    chip.classList.add('active');
+                }
+
+                filterContainer.appendChild(chip);
+            });
+        }
+
+        function toggleFilter(tag, chipElement) {
+            if (activeTags.has(tag)) {
+                activeTags.delete(tag);
+                chipElement.classList.remove('active');
+            } else {
+                activeTags.add(tag);
+                chipElement.classList.add('active');
+            }
+            handleSearch();
+        }
+
+        function renderResults(items) {
+            grid.innerHTML = '';
+
+            // Filter out invalid items (no title or empty filename-only titles)
+            const validItems = items.filter(item => {
+                if (!item.title || item.title === 'Untitled') return false;
+                if (item.title.endsWith('.htm') || item.title.endsWith('.html')) return false;
+                return true;
+            });
+
+            if (validItems.length === 0) {
+                grid.innerHTML = '<div class="loading">No results found.</div>';
+                resultCount.textContent = '0 results';
+                return;
+            }
+
+            resultCount.textContent = `${validItems.length} results found`;
+
+            validItems.forEach((item, itemIndex) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                // Get tag order preference for this item, or use original order
+                const itemKey = item.path || itemIndex;
+                let orderedTags = tagOrderPreferences.get(itemKey) || (item.tags ? [...item.tags] : []);
+
+                // If no preference exists yet, store the original
+                if (!tagOrderPreferences.has(itemKey) && item.tags) {
+                    tagOrderPreferences.set(itemKey, [...item.tags]);
+                    orderedTags = [...item.tags];
+                }
+
+                // Display tags with limit of 7
+                let tagsHtml = '';
+                if (orderedTags && orderedTags.length > 0) {
+                    const maxTags = 7;
+                    const tagsToShow = orderedTags.slice(0, maxTags);
+                    const remainingCount = orderedTags.length - maxTags;
+
+                    tagsHtml = tagsToShow.map(tag =>
+                        `<span class="tag-pill" onclick="filterByTagAndReorder('${tag}', '${itemKey}', event)">${tag}</span>`
+                    ).join('');
+
+                    // Add "+X more" indicator if there are hidden tags
+                    if (remainingCount > 0) {
+                        tagsHtml += `<span class="tag-more" style="color:#888; font-size:0.75rem; padding:4px 10px;">+${remainingCount} mais</span>`;
+                    }
+                }
+
+                // Date and Source logic
+                let metaHtml = '';
+                if (item.date || item.source) {
+                    metaHtml = `<div class="card-date" style="color:#888; font-size:0.85rem; margin-bottom:1rem;">
+                        ${item.date ? `<span>${item.date}</span>` : ''}
+                        ${item.source ? `<span> • ${item.source}</span>` : ''}
+                    </div>`;
+                }
+
+                card.innerHTML = `
+                <h3>${item.title || 'Untitled'}</h3>
+                ${metaHtml}
+                <div class="card-meta">
+                    ${tagsHtml}
+                </div>
+            `;
+                // Add click event for the whole card, but ensure tag clicks don't trigger it via propagation handling
+                card.onclick = (e) => {
+                    // If target is not a tag, open modal
+                    if (!e.target.classList.contains('tag-pill')) {
+                        openModal(item);
+                    }
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        function filterByTagAndReorder(tag, itemKey, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+
+            // Reorder tags for this specific item - move clicked tag to front
+            if (tagOrderPreferences.has(itemKey)) {
+                const currentOrder = tagOrderPreferences.get(itemKey);
+                const tagIndex = currentOrder.indexOf(tag);
+
+                if (tagIndex > -1) {
+                    // Remove tag from current position and add to front
+                    currentOrder.splice(tagIndex, 1);
+                    currentOrder.unshift(tag);
+                    tagOrderPreferences.set(itemKey, currentOrder);
+                }
+            }
+
+            // Activate the tag in the filter bar if not already active
+            if (!activeTags.has(tag)) {
+                activeTags.add(tag);
+
+                // Update UI of filter chips
+                const chips = document.querySelectorAll('.filter-chip');
+                chips.forEach(chip => {
+                    if (chip.textContent === tag) {
+                        chip.classList.add('active');
+                    }
+                });
+            }
+
+            // Re-render to show new tag order
+            handleSearch();
+
+            // Scroll to top to see filters
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function stripHtml(html) {
+            if (!html) return "";
+            const tmp = document.createElement("DIV");
+            tmp.innerHTML = html;
+            return tmp.textContent || tmp.innerText || "";
+        }
+
+        // Search Logic (Simple Debounce)
+        let resizeTimer;
+        function handleSearch() {
+            const query = searchInput.value.toLowerCase();
+            const category = categoryFilter.value;
+            const period = periodFilter.value;
+            const sort = sortOrder.value;
+
+            let filtered = allData.filter(item => {
+                // Text query match
+                const matchesQuery = !query ||
+                    (item.title && item.title.toLowerCase().includes(query)) ||
+                    (item.content && item.content.toLowerCase().includes(query));
+
+                // Category filter match
+                let matchesCategory = true;
+                if (category && categoryTagMap[category]) {
+                    matchesCategory = item.tags && categoryTagMap[category].some(tag => item.tags.includes(tag));
+                }
+
+                // Tag chips match (AND logic)
+                let matchesTags = true;
+                if (activeTags.size > 0) {
+                    if (!item.tags) {
+                        matchesTags = false;
+                    } else {
+                        matchesTags = Array.from(activeTags).every(tag => item.tags.includes(tag));
+                    }
+                }
+
+                // Period filter
+                let matchesPeriod = true;
+                if (period && item.date) {
+                    const date = item.date;
+                    // Handle individual years: showa11 -> matches "昭和11"
+                    if (period.startsWith('showa') && period.length === 7) {
+                        const yearNum = period.substring(5); // Extract "11" from "showa11"
+                        matchesPeriod = date.includes('昭和' + yearNum);
+                    } else if (period === 'unknown') {
+                        matchesPeriod = !date || date === '';
+                    }
+                }
+
+                return matchesQuery && matchesCategory && matchesTags && matchesPeriod;
+            });
+
+            // Sorting
+            if (sort === 'date-desc') {
+                filtered.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+            } else if (sort === 'date-asc') {
+                filtered.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+            } else if (sort === 'title') {
+                filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+            }
+
+            // Update result count text inside search box
+            const searchCountEl = document.getElementById('searchCount');
+            if (filtered.length > 0) {
+                searchCountEl.textContent = `${filtered.length} hit`;
+            } else {
+                searchCountEl.textContent = "0 hit";
+            }
+
+            // Update main result count
+            resultCount.textContent = `${filtered.length} resultados encontrados`;
+
+            // Always render grid view (limit to 100 for performance)
+            if (currentView === 'grid') {
+                renderResults(filtered.slice(0, 100));
+            } else {
+                renderTimeline(filtered.slice(0, 100));
+            }
+        }
+
+        searchInput.addEventListener('input', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(handleSearch, 300);
+        });
+
+        // Modal Logic
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+
+        function openModal(item) {
+            // Set title
+            modalTitle.textContent = item.title || '無題';
+
+            // Set metadata
+            const modalSource = document.getElementById('modalSource');
+            modalSource.textContent = item.source || '不明';
+
+            // Show content or fallback message
+            if (item.content && item.content.trim()) {
+                modalBody.innerHTML = item.content;
+            } else {
+                modalBody.innerHTML = '<p style="color:#999; text-align:center; padding:3rem;">コンテンツが利用できません。</p>';
+            }
+
+            // Append Date to the bottom of content
+            if (item.date) {
+                const dateDiv = document.createElement('div');
+                dateDiv.style.marginTop = '2rem';
+                dateDiv.style.textAlign = 'right';
+                dateDiv.style.color = '#666';
+                dateDiv.style.fontSize = '0.9em';
+                dateDiv.textContent = item.date;
+                modalBody.appendChild(dateDiv);
+            }
+
+            // "Read Also" Section (Related content based on tags)
+            if (item.tags && item.tags.length > 0) {
+                const relatedItems = allData
+                    .filter(other => other.title !== item.title && other.tags && other.tags.some(t => item.tags.includes(t)))
+                    .map(other => {
+                        const sharedCount = other.tags.filter(t => item.tags.includes(t)).length;
+                        return { ...other, sharedCount };
+                    })
+                    .sort((a, b) => b.sharedCount - a.sharedCount)
+                    .slice(0, 5); // Top 5 related
+
+                if (relatedItems.length > 0) {
+                    const readAlsoDiv = document.createElement('div');
+                    readAlsoDiv.style.marginTop = '3rem';
+                    readAlsoDiv.style.borderTop = '1px solid #eee';
+                    readAlsoDiv.style.paddingTop = '2rem';
+
+                    const readAlsoTitle = document.createElement('h3');
+                    readAlsoTitle.textContent = 'あわせて読みたい';
+                    readAlsoTitle.style.marginBottom = '1rem';
+                    readAlsoDiv.appendChild(readAlsoTitle);
+
+                    const list = document.createElement('ul');
+                    list.style.listStyle = 'none';
+                    list.style.padding = '0';
+
+                    relatedItems.forEach(related => {
+                        const li = document.createElement('li');
+                        li.style.marginBottom = '0.8rem';
+                        const a = document.createElement('a');
+                        a.href = '#';
+                        a.textContent = related.title;
+                        a.style.color = 'var(--primary)';
+                        a.style.textDecoration = 'none';
+                        a.style.fontWeight = '500';
+                        a.onclick = (e) => {
+                            e.preventDefault();
+                            openModal(related); // Recursively open related item
+                        };
+                        li.appendChild(a);
+                        list.appendChild(li);
+                    });
+
+                    readAlsoDiv.appendChild(list);
+                    modalBody.appendChild(readAlsoDiv);
+                }
+            }
+
+            modalOverlay.classList.add('active');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        // Close on click outside
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        // Render analytics view with charts
+        function renderAnalytics(items) {
+            document.getElementById('totalCount').textContent = items.length;
+            const unpublishedCount = items.filter(item =>
+                item.tags && item.tags.some(tag => tag.includes('未公開') || tag.includes('未発表'))
+            ).length;
+            document.getElementById('unpublishedCount').textContent = unpublishedCount;
+
+            const yearCounts = {};
+            items.forEach(item => {
+                if (item.date && item.date.trim()) {
+                    let year = item.date.match(/\d+/)?.[0] || '';
+                    if (item.date.includes('昭和') && year) {
+                        year = '昭和' + year;
+                    } else if (!item.date.includes('昭和') && year.length === 4) {
+                        // Keep full year for western format
+                        year = year;
+                    } else if (year) {
+                        year = '昭和' + year;
+                    } else {
+                        year = 'Desconhecido';
+                    }
+                    yearCounts[year] = (yearCounts[year] || 0) + 1;
+                } else {
+                    yearCounts['Desconhecido'] = (yearCounts['Desconhecido'] || 0) + 1;
+                }
+            });
+
+            const barChart = document.getElementById('barChart');
+            barChart.innerHTML = '';
+
+            // Sort years (put 'Desconhecido' at the end)
+            const years = Object.keys(yearCounts).sort((a, b) => {
+                if (a === 'Desconhecido') return 1;
+                if (b === 'Desconhecido') return -1;
+                return a.localeCompare(b);
+            });
+
+            const maxCount = Math.max(...Object.values(yearCounts), 1);
+
+            years.forEach(year => {
+                const count = yearCounts[year];
+                const barWrapper = document.createElement('div');
+                barWrapper.className = 'bar-wrapper';
+                barWrapper.onclick = () => { searchInput.value = year; setView('grid'); handleSearch(); };
+                barWrapper.innerHTML = `<div class="bar" style="height: ${(count / maxCount) * 100}%"><div class="bar-value">${count}</div></div><div class="bar-label">${year}</div>`;
+                barChart.appendChild(barWrapper);
+            });
+
+            const categoryCounts = {};
+            items.forEach(item => { if (item.tags) item.tags.forEach(tag => categoryCounts[tag] = (categoryCounts[tag] || 0) + 1); });
+            const sorted = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]).slice(0, 12);
+            const catDiv = document.getElementById('categoryDistribution');
+            catDiv.innerHTML = '';
+            const maxCat = Math.max(...sorted.map(([, c]) => c), 1);
+            const colors = { '結核': '#2c3e50', '癌': '#34495e', '浄霊': '#e67e22', '神様': '#16a085', '霊界': '#27ae60', '因縁': '#8e44ad', '政治': '#c0392b', '家庭': '#d35400', '芸術': '#2980b9', '農業': '#7f8c8d', '真理': '#f39c12', '五六七': '#e74c3c' };
+
+            sorted.forEach(([cat, cnt]) => {
+                const color = colors[cat] || '#95a5a6';
+                const div = document.createElement('div');
+                div.className = 'category-item';
+                div.style.cursor = 'pointer';
+                div.onclick = () => { if (!activeTags.has(cat)) { document.querySelectorAll('.filter-chip').forEach(c => { if (c.textContent === cat) { c.classList.add('active'); activeTags.add(cat); } }); setView('grid'); handleSearch(); } };
+                div.innerHTML = `<div class="category-color" style="background:${color}"></div><div style="flex:1"><div class="category-info"><span class="category-name">${cat}</span><span class="category-count">${cnt}</span></div><div class="category-bar-bg"><div class="category-bar-fill" style="width:${(cnt / maxCat) * 100}%;background:${color}"></div></div></div>`;
+                catDiv.appendChild(div);
+            });
+        }
+
+        // View toggle function
+        function setView(view) {
+            currentView = view;
+            document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
+            document.getElementById('timelineViewBtn').classList.toggle('active', view === 'timeline');
+            grid.classList.toggle('hidden', view === 'timeline');
+            timelineView.classList.toggle('hidden', view === 'grid');
+            handleSearch();
+        }
+
+        // Render timeline view
+        function renderTimeline(items) {
+            timelineView.innerHTML = '';
+            if (items.length === 0) {
+                timelineView.innerHTML = '<div class="loading">Nenhum resultado encontrado.</div>';
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+
+                const dateDisplay = item.date || 'Data desconhecida';
+
+                timelineItem.innerHTML = `
+                    <div class="timeline-spacer"></div>
+                    <div class="timeline-date">${dateDisplay}</div>
+                    <div class="timeline-content">
+                        <h3 style="color:var(--primary); margin:0 0 1rem 0;">${item.title || 'Sem título'}</h3>
+                        <div style="color:#666; font-size:0.9rem; line-height:1.6;">
+                            ${stripHtml(item.content).substring(0, 200)}...
+                        </div>
+                    </div>
+                `;
+
+                timelineItem.querySelector('.timeline-content').onclick = () => openModal(item);
+                timelineView.appendChild(timelineItem);
+            });
+        }
+
+        // Event listeners for new controls
+        categoryFilter.addEventListener('change', () => {
+            // Refresh tag chips based on category
+            initializeFilters(categoryFilter.value);
+            handleSearch();
+        });
+        periodFilter.addEventListener('change', handleSearch);
+        sortOrder.addEventListener('change', handleSearch);
+    </script>
+
+</body>
+
+</html>
