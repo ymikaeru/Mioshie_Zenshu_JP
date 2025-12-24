@@ -4,15 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Mioshie Zenshu</title>
+    <title>ログイン - 御教え全集</title>
     <style>
         :root {
-            --bg-overlay: rgba(245, 247, 250, 0.85);
+            --bg-color: #f5f7fa;
             --card-bg: #ffffff;
             --text-main: #2c3e50;
             --text-secondary: #7f8c8d;
             --primary: #5d737e;
-            /* Muted Nordic Blue */
             --primary-hover: #4a5d68;
             --error: #c0392b;
             --border: #e0e0e0;
@@ -21,28 +20,16 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-image: url('photo/museum.jpg');
-            background-size: cover;
-            background-position: center;
+            background-color: var(--bg-color);
             color: var(--text-main);
         }
 
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-overlay);
-            z-index: 1;
-            backdrop-filter: blur(2px);
-            /* Subtle blur for the background */
-        }
+        /* overlay removed */
 
         .login-card {
             position: relative;
@@ -52,11 +39,8 @@
             width: 100%;
             max-width: 380px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            /* Very subtle shadow */
-            /* Minimalist - no heavy borders or radius */
             border: 1px solid var(--border);
             border-radius: 4px;
-            /* Slightly rounded, almost square */
             text-align: center;
         }
 
@@ -65,9 +49,7 @@
             color: var(--text-main);
             font-size: 1.6rem;
             font-weight: 300;
-            /* Light weight for elegance */
             letter-spacing: 0.05em;
-            text-transform: uppercase;
         }
 
         .input-group {
@@ -82,7 +64,6 @@
             color: var(--text-secondary);
             font-weight: 500;
             letter-spacing: 0.05em;
-            text-transform: uppercase;
         }
 
         input[type="password"] {
@@ -119,7 +100,6 @@
             font-weight: 500;
             cursor: pointer;
             letter-spacing: 0.1em;
-            text-transform: uppercase;
             transition: background 0.3s ease, transform 0.2s ease;
             margin-top: 1rem;
         }
@@ -149,16 +129,16 @@
 </head>
 
 <body>
-    <div class="overlay"></div>
+    <!-- overlay removed -->
     <div class="login-card">
-        <h1>Mioshie Zenshu</h1>
+        <h1>御教え全集</h1>
         <form id="loginForm" onsubmit="handleLogin(event)">
             <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter access code" required autofocus>
+                <label for="password">パスワード</label>
+                <input type="password" id="password" placeholder="アクセスコードを入力" required autofocus>
             </div>
-            <button type="submit">Sign In</button>
-            <div id="errorMsg" class="error-msg">Incorrect password</div>
+            <button type="submit">ログイン</button>
+            <div id="errorMsg" class="error-msg">パスワードが間違っています</div>
         </form>
     </div>
 
