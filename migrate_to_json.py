@@ -4,7 +4,7 @@ import re
 from bs4 import BeautifulSoup
 
 ROOT_DIR = "/Users/michael/Documents/Ensinamentos/Mioshie_Zenshu_JP"
-SEARCH_DIRS = ["search1", "search2"]
+SEARCH_DIRS = ["search1", "search2", "gosanka", "gosuiji", "hakkousi", "kanren", "miosie", "sasshi"]
 OUTPUT_FILE = "data.js" # Outputting as a JS file for direct inclusion
 
 # MASSIVELY EXPANDED TAGGING DICTIONARY
