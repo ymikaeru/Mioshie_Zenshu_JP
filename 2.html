@@ -64,9 +64,7 @@
             </table>
         </center>
     </div>
-    <form action="../cgi/msearch.cgi" accept-charset="utf-8">
-        <input name="hint" value="ひらがな" type="hidden"><input name="index" value="" type="hidden"><input name="config"
-            value="" type="hidden">
+    <form action="advanced_search.html" method="get" target="_top">
         <div align="right">
             <table border="0" cellpadding="0" cellspacing="0" width="500">
                 <tbody>
@@ -83,24 +81,20 @@
                             </p>
                         </td>
                         <td colspan="2" align="center">
-                            <font size="2"><input size="22" name="query" type="text"></font>
+                            <font size="2"><input size="22" name="q" type="text"></font>
                         </td>
                         <td align="center">
                             <font size="2"><input value="検索" type="submit"></font>
                         </td>
                         <td width="40">
-                            <p align="center"><a href="../cgi/msearch.cgi">
-                                    <font face="ＭＳ ゴシック" size="2">help</font>
-                                </a></p>
+                            <!-- Removed broken help link -->
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </form>
-    <form action="../cgi/msearch.cgi" accept-charset="utf-8">
-        <input name="hint" value="ひらがな" type="hidden"><input name="index" value="shiryo" type="hidden"><input
-            name="config" value="" type="hidden">
+    <form action="advanced_search.html" method="get" target="_top">
         <div align="right">
             <table border="0" cellpadding="0" cellspacing="0" width="500">
                 <tbody>
@@ -117,7 +111,7 @@
                             </p>
                         </td>
                         <td colspan="2" align="center">
-                            <font size="2"><input size="22" name="query" type="text"></font>
+                            <font size="2"><input size="22" name="q" type="text"></font>
                         </td>
                         <td align="center">
                             <font size="2"><input value="検索" type="submit"></font>

@@ -762,7 +762,18 @@
             if (typeof allData !== 'undefined') {
                 // allData is already loaded
                 initializeFilters();
-                renderResults(allData.slice(0, 50));
+
+                // Check for URL query parameter 'q'
+                const urlParams = new URLSearchParams(window.location.search);
+                const queryParam = urlParams.get('q');
+                if (queryParam) {
+                    searchInput.value = queryParam;
+                    // Wait a tick for UI to settle
+                    setTimeout(() => handleSearch(), 100);
+                } else {
+                    renderResults(allData.slice(0, 50));
+                }
+
                 const loading = document.querySelector('.loading');
                 if (loading) loading.remove();
             } else {
