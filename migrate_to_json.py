@@ -225,7 +225,7 @@ def extract_data_from_html(filepath):
                 body_text = soup.body.get_text(separator="\n", strip=True)
 
         # Ignore generic titles and try to find better one from content
-        GENERIC_TERMS = ["御光話", "御垂示", "巻頭言", "御教え", "講話", "栄光", "地上天国", "救世", "信仰", "天国", "論文集", "随筆"]
+        GENERIC_TERMS = ["御光話", "御垂示", "巻頭言", "御教え", "講話", "栄光", "救世", "信仰", "論文集", "随筆"]
         
         is_generic = False
         if not title:
@@ -233,7 +233,7 @@ def extract_data_from_html(filepath):
         else:
             # Check if title is generic (e.g. "御垂示録10号" contains "御垂示")
             for term in GENERIC_TERMS:
-                if term in title and len(title) < 15:
+                if term in title and len(title) < 10:
                      is_generic = True
                      break
             
@@ -253,12 +253,19 @@ def extract_data_from_html(filepath):
                 # Skip typical header/source lines
                 if '『' in line and '』' in line: continue # Source ref
                 if '昭和' in line and ('発行' in line or '年' in line) and len(line) < 40: continue # Date (but allow if line is long/content)
-                if '岡田自観師' in line: continue # Header
+                if '岡田自観師' in line or '自 観 師' in line: continue # Header
                 
                 # Handle lines starting with ―― (often questions)
                 if line.startswith('――'): 
                     line = line.replace('――', '').strip()
                     if not line: continue
+                    
+                    # Fix for "―――　岡" split header
+                    # Remove all dashes and spaces to check content
+                    check_line = line.replace('―', '').replace('-', '').strip()
+                    if check_line == '岡':
+                         continue
+
                     # This is a question/content line, use it as title!
                     # Truncate if too long (e.g. > 60 chars)
                     if len(line) > 60:
@@ -267,7 +274,7 @@ def extract_data_from_html(filepath):
                         candidate_title = line
                     break
                 
-                if any(term in line for term in GENERIC_TERMS) and len(line) < 20: continue # Skip repeated generic headers in body
+                if any(term in line for term in GENERIC_TERMS) and len(line) < 10: continue # Skip repeated generic headers in body
                 if re.match(r'^\[.*\]$', line): continue # Skip dates like [六月一日]
                 
                 # Check for Parenthetical Summary (Highest Priority)

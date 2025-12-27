@@ -696,6 +696,11 @@
                     <option value="unknown">日付不明</option>
                 </select>
 
+                <select id="sourceFilter" class="filter-select">
+                    <option value="">全ての出典</option>
+                    <!-- Populated via JS -->
+                </select>
+
                 <select id="sortOrder" class="filter-select">
                     <option value="relevance">並び順: 関連性</option>
                     <option value="date-desc">並び順: 日付（新→古）</option>
@@ -745,6 +750,7 @@
         const resultCount = document.getElementById('result-count');
         const categoryFilter = document.getElementById('categoryFilter');
         const periodFilter = document.getElementById('periodFilter');
+        const sourceFilter = document.getElementById('sourceFilter');
         const sortOrder = document.getElementById('sortOrder');
 
         // State for active filters
@@ -789,6 +795,7 @@
 
             // Determine which tags to show
             let tagsToShow = new Set();
+            let sourcesToShow = new Set();
 
             if (category && categoryTagMap[category]) {
                 // Show only tags for selected category
@@ -798,6 +805,10 @@
                 allData.forEach(item => {
                     if (item.tags && Array.isArray(item.tags)) {
                         item.tags.forEach(tag => tagsToShow.add(tag));
+                    }
+                    // Collect sources
+                    if (item.source) {
+                        sourcesToShow.add(item.source.trim());
                     }
                 });
             }
@@ -816,6 +827,25 @@
 
                 filterContainer.appendChild(chip);
             });
+
+            // Populate source filter if empty (run once or when needed)
+            if (sourceFilter.options.length <= 1) { // 1 because of default "All" option
+                // If specific category selected, we might want to filter sources too, 
+                // but usually sources are global. Let's populate global sources for now.
+                // Re-collect all sources to be sure we have the global list
+                const allSources = new Set();
+                allData.forEach(item => {
+                    if (item.source) allSources.add(item.source.trim());
+                });
+
+                Array.from(allSources).sort().forEach(source => {
+                    if (!source) return;
+                    const option = document.createElement('option');
+                    option.value = source;
+                    option.textContent = source;
+                    sourceFilter.appendChild(option);
+                });
+            }
         }
 
         function toggleFilter(tag, chipElement) {
@@ -956,6 +986,7 @@
             const query = searchInput.value.toLowerCase();
             const category = categoryFilter.value;
             const period = periodFilter.value;
+            const source = sourceFilter.value;
             const sort = sortOrder.value;
 
             let filtered = allData.filter(item => {
@@ -993,7 +1024,13 @@
                     }
                 }
 
-                return matchesQuery && matchesCategory && matchesTags && matchesPeriod;
+                // Source filter
+                let matchesSource = true;
+                if (source) {
+                    matchesSource = item.source && item.source.trim() === source;
+                }
+
+                return matchesQuery && matchesCategory && matchesTags && matchesPeriod && matchesSource;
             });
 
             // Sorting
@@ -1060,53 +1097,7 @@
                 modalBody.appendChild(dateDiv);
             }
 
-            // "Read Also" Section (Related content based on tags)
-            if (item.tags && item.tags.length > 0) {
-                const relatedItems = allData
-                    .filter(other => other.title !== item.title && other.tags && other.tags.some(t => item.tags.includes(t)))
-                    .map(other => {
-                        const sharedCount = other.tags.filter(t => item.tags.includes(t)).length;
-                        return { ...other, sharedCount };
-                    })
-                    .sort((a, b) => b.sharedCount - a.sharedCount)
-                    .slice(0, 5); // Top 5 related
 
-                if (relatedItems.length > 0) {
-                    const readAlsoDiv = document.createElement('div');
-                    readAlsoDiv.style.marginTop = '3rem';
-                    readAlsoDiv.style.borderTop = '1px solid #eee';
-                    readAlsoDiv.style.paddingTop = '2rem';
-
-                    const readAlsoTitle = document.createElement('h3');
-                    readAlsoTitle.textContent = 'あわせて読みたい';
-                    readAlsoTitle.style.marginBottom = '1rem';
-                    readAlsoDiv.appendChild(readAlsoTitle);
-
-                    const list = document.createElement('ul');
-                    list.style.listStyle = 'none';
-                    list.style.padding = '0';
-
-                    relatedItems.forEach(related => {
-                        const li = document.createElement('li');
-                        li.style.marginBottom = '0.8rem';
-                        const a = document.createElement('a');
-                        a.href = '#';
-                        a.textContent = related.title;
-                        a.style.color = 'var(--primary)';
-                        a.style.textDecoration = 'none';
-                        a.style.fontWeight = '500';
-                        a.onclick = (e) => {
-                            e.preventDefault();
-                            openModal(related); // Recursively open related item
-                        };
-                        li.appendChild(a);
-                        list.appendChild(li);
-                    });
-
-                    readAlsoDiv.appendChild(list);
-                    modalBody.appendChild(readAlsoDiv);
-                }
-            }
 
             modalOverlay.classList.add('active');
         }
@@ -1235,6 +1226,7 @@
             handleSearch();
         });
         periodFilter.addEventListener('change', handleSearch);
+        sourceFilter.addEventListener('change', handleSearch);
         sortOrder.addEventListener('change', handleSearch);
     </script>
 
