@@ -1,0 +1,597 @@
+/* Nordic Design - Grid Layout with Modal
+   Ultra-Minimalist Scandinavian Style
+   ================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&display=swap');
+
+/* ===== Variables ===== */
+:root {
+    --bg-main: #fafafa;
+    --bg-card: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #555;
+    --text-muted: #888;
+    --border-light: #e5e5e5;
+    --accent: #4a6fa5;
+    --accent-hover: #3d5d8a;
+    --spring: #d4a5b9;
+    --summer: #7fa37f;
+    --autumn: #c4956a;
+    --winter: #8fa8c4;
+}
+
+/* ===== Base ===== */
+body {
+    background: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Container - Wider ===== */
+.nordic-container {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+/* ===== Loading ===== */
+.loading-container {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    margin: 0 auto 1rem;
+    border: 2px solid var(--border-light);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#content-container {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* ===== Header ===== */
+.page-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.page-header h1 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.25rem;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* ===== Filter Bar ===== */
+.filter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 0.5rem 1.25rem;
+    border: 1px solid var(--border-light);
+    background: var(--bg-card);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+.filter-btn[data-season="春"] {
+    --filter-color: var(--spring);
+}
+
+.filter-btn[data-season="夏"] {
+    --filter-color: var(--summer);
+}
+
+.filter-btn[data-season="秋"] {
+    --filter-color: var(--autumn);
+}
+
+.filter-btn[data-season="冬"] {
+    --filter-color: var(--winter);
+}
+
+.filter-btn[data-season]:hover,
+.filter-btn[data-season].active {
+    background: var(--filter-color);
+    border-color: var(--filter-color);
+    color: white;
+}
+
+/* ===== Poem Grid ===== */
+.poem-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+/* ===== Poem Card - Compact ===== */
+.poem-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+}
+
+.poem-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.poem-card.hidden {
+    display: none;
+}
+
+.poem-card .poem-number {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+}
+
+.poem-card .poem-text {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.25rem;
+    line-height: 1.9;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.poem-card .poem-season {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.poem-card .season-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    margin-right: 0.3rem;
+}
+
+.season-tag.春 {
+    background: rgba(212, 165, 185, 0.2);
+    color: #a87890;
+}
+
+.season-tag.夏 {
+    background: rgba(127, 163, 127, 0.2);
+    color: #5a8a5a;
+}
+
+.season-tag.秋 {
+    background: rgba(196, 149, 106, 0.2);
+    color: #9a6a3a;
+}
+
+.season-tag.冬 {
+    background: rgba(143, 168, 196, 0.2);
+    color: #5a7a9a;
+}
+
+/* ===== Section Headers ===== */
+.section-header {
+    grid-column: 1 / -1;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 1.5rem 0 0.5rem;
+    border-bottom: 1px solid var(--border-light);
+    margin-top: 1rem;
+}
+
+.section-header:first-child {
+    margin-top: 0;
+}
+
+/* ===== Intro Paragraphs ===== */
+.intro-section {
+    grid-column: 1 / -1;
+    max-width: 700px;
+    margin: 0 auto 1rem;
+}
+
+.other-paragraph {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin: 0.5rem 0;
+}
+
+/* ===== Modal - Nordic Elegance ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(250, 250, 250, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    padding: 2rem;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    max-width: 880px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    transform: translateY(30px) scale(0.98);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(0, 0, 0, 0.03);
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0) scale(1);
+}
+
+.modal-header {
+    padding: 2.5rem 3rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    z-index: 10;
+}
+
+.modal-header h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.75rem;
+    font-weight: 300;
+    margin: 0;
+    line-height: 2;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 0.5rem;
+    line-height: 1;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    margin: -0.5rem -0.5rem 0 0;
+}
+
+.modal-close:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--text-primary);
+}
+
+.modal-body {
+    padding: 0.5rem 3rem 3rem;
+}
+
+.modal-section {
+    margin-bottom: 2.5rem;
+}
+
+.modal-section:last-child {
+    margin-bottom: 0;
+}
+
+.modal-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.modal-reading {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 1.75rem 2rem;
+    background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+    border-radius: 16px;
+    letter-spacing: 0.08em;
+    line-height: 2.2;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.modal-meaning {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    line-height: 2;
+    padding: 1.75rem 2rem;
+    background: transparent;
+    border-left: 2px solid var(--accent);
+    margin-left: 0.5rem;
+}
+
+.modal-explanation {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.95;
+    padding: 1.5rem 1.75rem;
+    background: transparent;
+    border-radius: 0;
+    margin-bottom: 0;
+    border-left: 2px solid transparent;
+    margin-left: 0.5rem;
+    position: relative;
+}
+
+.modal-explanation+.modal-explanation {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.modal-explanation.kigo {
+    border-left-color: var(--summer);
+}
+
+.modal-explanation.kototama {
+    border-left-color: var(--accent);
+}
+
+.modal-explanation.depth {
+    border-left-color: var(--autumn);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .poem-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-controls {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .nordic-container {
+        margin: 0;
+        padding: 1rem;
+    }
+
+    .modal-overlay {
+        padding: 1rem;
+    }
+
+    .modal-header,
+    .modal-body {
+        padding: 1rem 1.25rem;
+    }
+
+    .modal-header h2 {
+        font-size: 1.1rem;
+    }
+}
+
+/* ===== Filter Controls Layout ===== */
+.filter-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.filter-bar {
+    margin-bottom: 0;
+}
+
+/* ===== Mood Filter ===== */
+.mood-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mood-filter label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.mood-select {
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    border: 1px solid var(--border-light);
+    background: var(--bg-card);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: inherit;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    transition: all 0.2s ease;
+}
+
+.mood-select:hover {
+    border-color: var(--accent);
+}
+
+.mood-select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* ===== Poem Tags ===== */
+.poem-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.poem-tag {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    background: rgba(74, 111, 165, 0.1);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.poem-tag:hover {
+    background: var(--accent);
+    color: white;
+}
+
+/* Tag Types */
+.poem-tag.nature {
+    background: rgba(127, 163, 127, 0.15);
+    color: #5a8a5a;
+}
+
+.poem-tag.nature:hover {
+    background: var(--summer);
+    color: white;
+}
+
+.poem-tag.spiritual {
+    background: rgba(196, 149, 106, 0.15);
+    color: #9a6a3a;
+}
+
+.poem-tag.spiritual:hover {
+    background: var(--autumn);
+    color: white;
+}
+
+.poem-tag.emotion {
+    background: rgba(212, 165, 185, 0.15);
+    color: #a87890;
+}
+
+.poem-tag.emotion:hover {
+    background: var(--spring);
+    color: white;
+}
+
+/* Active Tag Filter State */
+.poem-tag.active-filter {
+    background: var(--accent);
+    color: white;
+    font-weight: 500;
+}
+
+/* ===== Tag Clear Button ===== */
+.tag-filter-info {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.tag-filter-info.active {
+    display: flex;
+}
+
+.tag-filter-info span {
+    background: var(--accent);
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.clear-tag-filter {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 0.8rem;
+    text-decoration: underline;
+    padding: 0;
+}
+
+.clear-tag-filter:hover {
+    color: var(--accent-hover);
+}

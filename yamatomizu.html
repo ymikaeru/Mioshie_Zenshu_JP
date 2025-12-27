@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>山と水 AI解説</title>
+    <link rel="stylesheet" type="text/css" href="nordic_style.css?v=6">
+    <script src="js/yamatomizu_render.js?v=6" defer></script>
+</head>
+
+<body>
+
+    <div class="nordic-container">
+        <!-- Header -->
+        <header class="page-header">
+            <h1>山と水 AI解説</h1>
+            <p class="subtitle">AIによる詳細解説と分析</p>
+        </header>
+
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+            <!-- Season Filter Bar -->
+            <div class="filter-bar" id="filter-bar">
+                <button class="filter-btn active" data-season="all">すべて</button>
+                <button class="filter-btn" data-season="春">春</button>
+                <button class="filter-btn" data-season="夏">夏</button>
+                <button class="filter-btn" data-season="秋">秋</button>
+                <button class="filter-btn" data-season="冬">冬</button>
+            </div>
+
+            <!-- Mood Filter -->
+            <div class="mood-filter">
+                <label for="mood-select">気分:</label>
+                <select id="mood-select" class="mood-select">
+                    <option value="all">すべて</option>
+                    <option value="faith">信仰・随順</option>
+                    <option value="hope">希望・光明</option>
+                    <option value="purification">浄化・再生</option>
+                    <option value="harmony">自然美・調和</option>
+                    <option value="mission">経綸・使命</option>
+                    <option value="art">言霊・芸術</option>
+                    <option value="serenity">孤独・静寂</option>
+                    <option value="love">愛・慈悲</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tag Filter Info -->
+        <div class="tag-filter-info" id="tag-filter-info">
+            タグで絞り込み中: <span id="active-tag-name"></span>
+            <button class="clear-tag-filter" id="clear-tag-filter">クリア</button>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading-container">
+            <div class="spinner"></div>
+            <p>コンテンツを読み込み中...</p>
+        </div>
+
+        <!-- Poem Grid Container -->
+        <div id="content-container" class="poem-grid">
+            <!-- Cards will be injected here -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Detail content injected here -->
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
