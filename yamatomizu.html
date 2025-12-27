@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>山と水 AI解説</title>
     <link rel="stylesheet" type="text/css" href="nordic_style.css?v=6">
-    <script src="js/yamatomizu_render.js?v=6" defer></script>
+    <script src="js/yamatomizu_render.js?v=4" defer></script>
 </head>
 
 <body>
@@ -29,20 +29,36 @@
                 <button class="filter-btn" data-season="冬">冬</button>
             </div>
 
-            <!-- Mood Filter -->
-            <div class="mood-filter">
-                <label for="mood-select">気分:</label>
-                <select id="mood-select" class="mood-select">
-                    <option value="all">すべて</option>
-                    <option value="faith">信仰・随順</option>
-                    <option value="hope">希望・光明</option>
-                    <option value="purification">浄化・再生</option>
-                    <option value="harmony">自然美・調和</option>
-                    <option value="mission">経綸・使命</option>
-                    <option value="art">言霊・芸術</option>
-                    <option value="serenity">孤独・静寂</option>
-                    <option value="love">愛・慈悲</option>
-                </select>
+            <!-- Secondary Filters -->
+            <div class="secondary-filters">
+                <!-- Section Filter -->
+                <div class="filter-group">
+                    <label for="section-select">章:</label>
+                    <select id="section-select" class="filter-select">
+                        <option value="all">すべての章</option>
+                    </select>
+                </div>
+
+                <!-- Mood Filter -->
+                <div class="filter-group">
+                    <label for="mood-select">気分:</label>
+                    <select id="mood-select" class="mood-select">
+                        <option value="all">すべて</option>
+                        <option value="faith">信仰・随順</option>
+                        <option value="hope">希望・光明</option>
+                        <option value="purification">浄化・再生</option>
+                        <option value="harmony">自然美・調和</option>
+                        <option value="mission">経綸・使命</option>
+                        <option value="art">言霊・芸術</option>
+                        <option value="serenity">孤独・静寂</option>
+                        <option value="love">愛・慈悲</option>
+                    </select>
+                </div>
+
+                <!-- Search Field -->
+                <div class="search-group">
+                    <input type="text" id="search-input" class="search-input" placeholder="御歌を検索...">
+                </div>
             </div>
         </div>
 
@@ -69,6 +85,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modal-title"></h2>
+                <div class="modal-actions" id="modal-actions"></div>
                 <button class="modal-close" id="modal-close">&times;</button>
             </div>
             <div class="modal-body" id="modal-body">

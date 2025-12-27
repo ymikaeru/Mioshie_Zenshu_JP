@@ -301,11 +301,57 @@ body {
     padding: 2.5rem 3rem 1.5rem;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
+    /* Changed from flex-start to center */
     position: sticky;
     top: 0;
     background: #ffffff;
     z-index: 10;
+}
+
+/* ===== Share Button ===== */
+.modal-actions {
+    position: static;
+    /* Removed absolute positioning */
+    display: flex;
+    align-items: center;
+    margin-right: 1.5rem;
+    margin-left: auto;
+    /* Push to right */
+}
+
+.share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    gap: 0;
+    background: transparent;
+    border: 1px solid var(--border-light);
+    border-radius: 50%;
+    /* Circle shape */
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.share-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(74, 111, 165, 0.05);
+}
+
+.share-btn.copied {
+    background: #e6f4ea;
+    color: #1e8e3e;
+    border-color: #ceead6;
+}
+
+.share-btn svg {
+    width: 14px;
+    height: 14px;
 }
 
 .modal-header h2 {
@@ -319,16 +365,22 @@ body {
 }
 
 .modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
     background: none;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
     color: var(--text-muted);
-    padding: 0.5rem;
     line-height: 1;
     border-radius: 50%;
     transition: all 0.2s ease;
-    margin: -0.5rem -0.5rem 0 0;
+    margin: 0;
+    /* Updated from negative margin */
 }
 
 .modal-close:hover {
@@ -447,18 +499,131 @@ body {
 /* ===== Filter Controls Layout ===== */
 .filter-controls {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.25rem;
     margin-bottom: 2rem;
-    flex-wrap: wrap;
 }
 
 .filter-bar {
     margin-bottom: 0;
 }
 
-/* ===== Mood Filter ===== */
+.secondary-filters {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.filter-select,
+.mood-select {
+    padding: 0.6rem 2.25rem 0.6rem 1rem;
+    border: 1px solid var(--border-light);
+    background: var(--bg-card);
+    border-radius: 25px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: inherit;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    transition: all 0.2s ease;
+    min-width: 140px;
+}
+
+.filter-select:hover,
+.mood-select:hover {
+    border-color: var(--accent);
+}
+
+.filter-select:focus,
+.mood-select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* ===== Search Field ===== */
+.search-group {
+    position: relative;
+}
+
+.search-input {
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border: 1px solid var(--border-light);
+    background: var(--bg-card);
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    width: 220px;
+    transition: all 0.2s ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 0.85rem center;
+}
+
+.search-input:hover {
+    border-color: var(--accent);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    width: 280px;
+}
+
+.search-input::placeholder {
+    color: var(--text-muted);
+}
+
+/* ===== Poem Card Header ===== */
+.poem-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+}
+
+.poem-section-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.04);
+    padding: 0.2rem 0.6rem;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+/* ===== Modal Section Info ===== */
+.modal-section-info {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.section-badge {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--accent);
+    background: rgba(74, 111, 165, 0.1);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+/* ===== Mood Filter (deprecated, keeping for compatibility) ===== */
 .mood-filter {
     display: flex;
     align-items: center;
@@ -469,21 +634,6 @@ body {
     font-size: 0.8rem;
     color: var(--text-muted);
     font-weight: 500;
-}
-
-.mood-select {
-    padding: 0.5rem 2rem 0.5rem 0.75rem;
-    border: 1px solid var(--border-light);
-    background: var(--bg-card);
-    border-radius: 20px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    font-family: inherit;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    transition: all 0.2s ease;
 }
 
 .mood-select:hover {

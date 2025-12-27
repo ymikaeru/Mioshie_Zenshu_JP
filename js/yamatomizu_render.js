@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingElement = document.getElementById('loading');
     const filterBar = document.getElementById('filter-bar');
     const moodSelect = document.getElementById('mood-select');
+    const sectionSelect = document.getElementById('section-select');
+    const searchInput = document.getElementById('search-input');
     const tagFilterInfo = document.getElementById('tag-filter-info');
     const activeTagName = document.getElementById('active-tag-name');
     const clearTagFilter = document.getElementById('clear-tag-filter');
@@ -13,8 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalClose = document.getElementById('modal-close');
 
     let allPoems = [];
+    let allSections = [];
     let currentSeason = 'all';
     let currentMood = 'all';
+    let currentSection = 'all';
+    let currentSearch = '';
     let currentTag = null;
 
     // Mood keywords mapping
@@ -44,10 +49,23 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
-            allPoems = extractPoems(data);
+            const result = extractPoems(data);
+            allPoems = result.poems;
+            allSections = result.sections;
+            populateSectionFilter(allSections);
             renderPoems(allPoems);
             loadingElement.style.display = 'none';
             container.style.opacity = 1;
+
+            // Check for initial URL param
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialId = urlParams.get('id');
+            if (initialId) {
+                const poem = allPoems.find(p => p.index === parseInt(initialId));
+                if (poem) {
+                    openModal(poem, false);
+                }
+            }
         })
         .catch(error => {
             console.error('Error loading content:', error);
@@ -70,6 +88,26 @@ document.addEventListener('DOMContentLoaded', () => {
         applyFilters();
     });
 
+    // Section filter select
+    if (sectionSelect) {
+        sectionSelect.addEventListener('change', (e) => {
+            currentSection = e.target.value;
+            applyFilters();
+        });
+    }
+
+    // Search input with debounce
+    let searchTimeout;
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentSearch = e.target.value.toLowerCase().trim();
+                applyFilters();
+            }, 300);
+        });
+    }
+
     // Clear tag filter
     clearTagFilter.addEventListener('click', () => {
         currentTag = null;
@@ -86,15 +124,80 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Escape') closeModal();
     });
 
-    function closeModal() {
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const poemId = urlParams.get('id');
+        if (poemId) {
+            const poem = allPoems.find(p => p.index === parseInt(poemId));
+            if (poem) {
+                openModal(poem, false); // false = don't push state again
+            }
+        } else {
+            closeModal(false); // false = don't push state again
+        }
+    });
+
+    function closeModal(updateHistory = true) {
         modalOverlay.classList.remove('active');
         document.body.style.overflow = '';
+        if (updateHistory) {
+            const newUrl = window.location.pathname;
+            history.pushState(null, '', newUrl);
+        }
     }
 
-    function openModal(poem) {
+    const modalActions = document.getElementById('modal-actions');
+
+    // ... (rest of listener code)
+
+    function openModal(poem, updateHistory = true) {
         modalTitle.textContent = poem.text;
 
+        // Update URL
+        if (updateHistory) {
+            const newUrl = `${window.location.pathname}?id=${poem.index}`;
+            history.pushState({ id: poem.index }, '', newUrl);
+        }
+
+        // Header actions (Share button)
+        if (modalActions) {
+            modalActions.innerHTML = `
+                <button class="share-btn" id="btn-share-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                </button>
+            `;
+
+            // Add event listener to new share button
+            const shareBtn = document.getElementById('btn-share-icon');
+            if (shareBtn) {
+                shareBtn.addEventListener('click', () => {
+                    const url = window.location.href;
+                    navigator.clipboard.writeText(url).then(() => {
+                        const originalContent = shareBtn.innerHTML;
+                        shareBtn.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        `;
+                        shareBtn.classList.add('copied');
+                        setTimeout(() => {
+                            shareBtn.innerHTML = originalContent;
+                            shareBtn.classList.remove('copied');
+                        }, 2000);
+                    });
+                });
+            }
+        }
+
         let bodyHTML = '';
+
+        // Section info
+        if (poem.sectionTitle) {
+            bodyHTML += `
+                <div class="modal-section-info">
+                    <span class="section-badge">${poem.sectionTitle}</span>
+                </div>
+            `;
+        }
 
         // Reading
         if (poem.reading) {
@@ -132,18 +235,58 @@ document.addEventListener('DOMContentLoaded', () => {
         modalBody.innerHTML = bodyHTML;
         modalOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
+
+
+    }
+
+    function populateSectionFilter(sections) {
+        if (!sectionSelect) return;
+
+        // Clear existing options except "all"
+        sectionSelect.innerHTML = '<option value="all">すべての章</option>';
+
+        // Add section options
+        sections.forEach(section => {
+            const option = document.createElement('option');
+            option.value = section;
+            option.textContent = section;
+            sectionSelect.appendChild(option);
+        });
     }
 
     function extractPoems(data) {
         const poems = [];
+        const sectionsSet = new Set();
         let currentSectionTitle = '';
         let poemIndex = 0;
 
+        // List of titles to skip (preface content, not poem sections)
+        const skipTitles = [
+            'Introduction',
+            '歌 集 山 と 水 初版',
+            '※「山と水」には',
+            'はしがき',
+            '私は最近',
+            '私は歌は本格的',
+            '昭和弐拾四年',
+            '熱海の寓居',
+            '明 麿'
+        ];
+
         if (data.data && Array.isArray(data.data)) {
             data.data.forEach(section => {
-                // Track section titles for season detection
+                // Track section titles for filtering (level 2 items that are not numbered)
                 if (section.title && section.level === 2) {
-                    currentSectionTitle = section.title;
+                    const title = section.title.trim();
+
+                    // Check if it's a poem section (not preface content and not numbered)
+                    const isSkipTitle = skipTitles.some(skip => title.startsWith(skip));
+                    const isNumbered = /^\d+\.$/.test(title);
+
+                    if (!isSkipTitle && !isNumbered && title.length > 0 && title.length < 20) {
+                        currentSectionTitle = title;
+                        sectionsSet.add(title);
+                    }
                 }
 
                 if (section.content && Array.isArray(section.content)) {
@@ -236,7 +379,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        return poems;
+        // Convert set to sorted array
+        const sections = Array.from(sectionsSet);
+
+        return { poems, sections };
     }
 
     function extractMoods(text) {
@@ -297,9 +443,23 @@ document.addEventListener('DOMContentLoaded', () => {
             if (poem.season) card.dataset.season = poem.season;
             if (poem.moods.length > 0) card.dataset.moods = poem.moods.join(',');
             if (poem.tags.length > 0) card.dataset.tags = poem.tags.map(t => t.name).join(',');
+            if (poem.sectionTitle) card.dataset.section = poem.sectionTitle;
+
+            // Store searchable text
+            const searchableText = [
+                poem.text,
+                poem.reading || '',
+                poem.meaning || '',
+                poem.sectionTitle || '',
+                ...poem.explanations
+            ].join(' ').toLowerCase();
+            card.dataset.searchtext = searchableText;
 
             let html = `
-                <div class="poem-number">${poem.index}.</div>
+                <div class="poem-header">
+                    <span class="poem-number">${poem.index}.</span>
+                    ${poem.sectionTitle ? `<span class="poem-section-label">${poem.sectionTitle}</span>` : ''}
+                </div>
                 <div class="poem-text">${poem.text}</div>
             `;
 
@@ -360,6 +520,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (show && currentMood !== 'all') {
                 const moods = card.dataset.moods ? card.dataset.moods.split(',') : [];
                 if (!moods.includes(currentMood)) {
+                    show = false;
+                }
+            }
+
+            // Section filter
+            if (show && currentSection !== 'all') {
+                if (card.dataset.section !== currentSection) {
+                    show = false;
+                }
+            }
+
+            // Search filter
+            if (show && currentSearch) {
+                const searchText = card.dataset.searchtext || '';
+                if (!searchText.includes(currentSearch)) {
                     show = false;
                 }
             }
