@@ -1,297 +1,283 @@
+<!DOCTYPE html>
 <html lang="ja">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-    <title>2</title>
-    <link rel="stylesheet" type="text/css" href="style1.css">
+    <meta charset="utf-8">
+    <title>岡田自観師の論文集</title>
+    <style>
+        body {
+            font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+            background-color: #e9feda;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 90vh;
+            /* Centered vertically */
+        }
+
+        h1 {
+            font-family: "HG正楷書体-PRO", "HGP正楷書体", "Hiragino Mincho ProN", serif;
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            letter-spacing: 0.2em;
+            text-align: center;
+        }
+
+        #yamatomizu-widget {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 2px;
+            /* Slight roundness for Nordic feel but keeping it clean */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            /* Soft shadow */
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-sizing: border-box;
+            border: 1px solid #e0e0e0;
+        }
+
+        .poem-container {
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-bottom: 30px;
+            text-align: left;
+            /* Better for long text */
+        }
+
+        .poem-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .poem-title {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            font-family: sans-serif;
+        }
+
+        .poem-text {
+            font-size: 24px;
+            line-height: 1.6;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-family: "HG正楷書体-PRO", "HGP正楷書体", serif;
+        }
+
+        .poem-reading {
+            font-size: 13px;
+            color: #95a5a6;
+            margin-bottom: 25px;
+        }
+
+        .poem-section {
+            margin-bottom: 15px;
+            font-size: 15px;
+            line-height: 1.6;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .poem-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-label {
+            font-weight: bold;
+            color: #5d737e;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 13px;
+            font-family: sans-serif;
+        }
+
+        /* Scrollable content if it gets too tall */
+        .poem-content-scroll {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+            /* scrollbar styling */
+            scrollbar-width: thin;
+            scrollbar-color: #bdc3c7 #f5f5f5;
+        }
+
+        .poem-content-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .poem-content-scroll::-webkit-scrollbar-track {
+            background: #f5f5f5;
+        }
+
+        .poem-content-scroll::-webkit-scrollbar-thumb {
+            background-color: #bdc3c7;
+            border-radius: 3px;
+        }
+    </style>
 </head>
 
-<body style="background-color: rgb(233, 254, 218);">
-    <div align="center">
-        <center>
-            <table border="0" cellpadding="0" cellspacing="3" width="95%">
-                <tbody>
-                    <tr>
-                        <td rowspan="2">
-                            <p align="right">
-                                <font face="Century Gothic" size="1">SINCE</font>
-                                <font size="1">　</font>
-                                <font size="3">　</font>　<font face="Century Gothic" size="2"> 2005/01/17<br> </font>
-                                <font face="HG丸ｺﾞｼｯｸM-PRO" size="1">最終更新日</font>
-                                <font size="3">　</font>　<font face="Century Gothic" size="2">2008/01/09</font>
-                            </p>
-                        </td>
-                        <td rowspan="2">
-                            <p align="center">
-                                <font face="HG正楷書体-PRO" size="4"><strong>岡 田 自 観 師 の
-                                        論 文 集</strong></font>
-                            </p>
-                        </td>
-                        <td rowspan="2">
-                            <div align="center">
-                                <center>
-                                    <table border="0" cellpadding="0" cellspacing="0">
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <p align="left">
-                                                        <font size="4"><img
-                                                                src="http://www.rattail.org/x/dream.cgi?id=secret&gif=8&fig=7">
-                                                        </font>
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </center>
-                            </div>
-                        </td>
-                        <td style="font-family: Arial;">
-                            <p align="center"><a href="index.html" target="_top">
-                                    <font color="#804040" size="2"><strong>Log out</strong></font>
-                                </a></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p align="center"><a href="index.html" target="_top">
-                                    <font color="#804040" size="2"><strong>ログアウト</strong></font>
-                                </a></p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </center>
+<body>
+
+    <h1>岡 田 自 観 師 の 論 文 集</h1>
+
+    <div id="yamatomizu-widget">
+        <div class="nav-buttons">
+            <button class="nav-btn" id="prev-btn" onclick="changePoem(-1)">&#10094;</button>
+            <button class="nav-btn" id="next-btn" onclick="changePoem(1)">&#10095;</button>
+        </div>
+
+        <div class="poem-container">
+            <div id="poem-display" class="poem-content-scroll">
+                <!-- Content will be loaded here -->
+                <p style="color: #999; text-align: center;">Loading poems...</p>
+            </div>
+        </div>
+
+        <a href="yamatomizu.html" target="main" class="action-btn">
+            山と水 AI解説へ
+        </a>
     </div>
-    <form action="advanced_search.html" method="get" target="_top">
-        <div align="right">
-            <table border="0" cellpadding="0" cellspacing="0" width="500">
-                <tbody>
-                    <tr>
-                        <td width="200">
-                            <font face="ＭＳ ゴシック" size="2">◎
-                                　 </font><a href="readme1.html">
-                                <font face="ＭＳ ゴシック" size="2">このＨＰについて</font>
-                            </a>
-                        </td>
-                        <td width="75">
-                            <p align="center">
-                                <font color="#000000" size="2"><strong>御教え検索</strong></font>
-                            </p>
-                        </td>
-                        <td colspan="2" align="center">
-                            <font size="2"><input size="22" name="q" type="text"></font>
-                        </td>
-                        <td align="center">
-                            <font size="2"><input value="検索" type="submit"></font>
-                        </td>
-                        <td width="40">
-                            <!-- Removed broken help link -->
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </form>
-    <form action="advanced_search.html" method="get" target="_top">
-        <div align="right">
-            <table border="0" cellpadding="0" cellspacing="0" width="500">
-                <tbody>
-                    <tr>
-                        <td width="200">
-                            <font face="ＭＳ ゴシック" size="2">◎
-                                　 </font><a href="readme.html">
-                                <font face="ＭＳ ゴシック" size="2">著作権等に関する御願い</font>
-                            </a>
-                        </td>
-                        <td width="75">
-                            <p align="center">
-                                <font size="2"><strong>　資料検索</strong></font>
-                            </p>
-                        </td>
-                        <td colspan="2" align="center">
-                            <font size="2"><input size="22" name="q" type="text"></font>
-                        </td>
-                        <td align="center">
-                            <font size="2"><input value="検索" type="submit"></font>
-                        </td>
-                        <td width="40">　</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </form>
-    <div align="right">
-        <table border="0" cellpadding="0" cellspacing="0" width="500">
-            <tbody>
-                <tr>
-                    <td align="right" style="padding-top: 10px;">
-                        <a href="advanced_search.html" target="_top" style="text-decoration: none;">
-                            <button style="
-                                background-color: #5d737e; 
-                                color: white; 
-                                border: none; 
-                                padding: 8px 16px; 
-                                border-radius: 4px; 
-                                cursor: pointer; 
-                                font-family: 'Helvetica Neue', Arial, sans-serif;
-                                font-size: 14px;
-                                font-weight: bold;
-                                display: flex;
-                                align-items: center;
-                                gap: 8px;
-                            ">
-                                <span>🔍</span> Advanced Search (New)
-                            </button>
-                        </a>
-                    </td>
-                    <td width="40">　</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <blockquote>
-        <div align="center">
-            <center><br></center>
-        </div>
-        <div align="center">
-            <center>
-                <table bordercolorlight="#FFFFFF" border="0" bordercolor="#008080" cellpadding="3" cellspacing="1">
-                    <tbody>
-                        <tr>
-                            <td colspan="2">
-                                <p align="center">
-                                    <font color="#008080" face="ＭＳ ゴシック" size="1">むげんぜったいむしむしゅう　これぞうちゅうのしんりなりける</font>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <p align="left">
-                                    <font color="#004040" face="HG正楷書体-PRO" size="4"><strong>無限絶対無始無終</strong></font>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <p align="right">
-                                    <font face="HG正楷書体-PRO" size="4"><strong>こ
-                                            れぞ宇宙の真理なりける　</strong></font>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <p align="right">
-                                    <font color="#004040" face="ＭＳ Ｐゴシック" size="2"><strong>　
-                                            　　　　　　　　　　　 　　　　　</strong>　「栄光」232号　S28.10.28</font>
-                                </p>
-                                <div style="text-align: center; height: 108px;">
-                                    <table style="text-align: left; margin-left: auto; margin-right: auto;" border="0"
-                                        cellpadding="2" cellspacing="2">
-                                        <tbody>
-                                            <tr>
-                                                <td><span
-                                                        style="font-family: Times New Roman,Times,serif; font-weight: bold; color: rgb(0, 153, 0);">Infinite
-                                                        and perfect,</span><br><span
-                                                        style="font-family: Times New Roman,Times,serif; font-weight: bold; color: rgb(0, 153, 0);">There
-                                                        is no beginning</span><br><span
-                                                        style="font-family: Times New Roman,Times,serif; font-weight: bold; color: rgb(0, 153, 0);">Or
-                                                        ending:</span><br><span
-                                                        style="font-family: Times New Roman,Times,serif; font-weight: bold; color: rgb(0, 153, 0);">This
-                                                        is absolutely the true</span><br><span
-                                                        style="font-family: Times New Roman,Times,serif; font-weight: bold; color: rgb(0, 153, 0);">Existence
-                                                        of the universe.</span><br>
-                                                    <div style="text-align: center;"></div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </center>
-        </div>
-        <div align="center">
-            <center>
-                <table style="width: 330px; height: 91px;" bordercolorlight="#C0C0C0" border="0" bordercolor="#c0c0c0"
-                    cellpadding="2" cellspacing="0">
-                    <tbody>
-                        <tr>
-                            <td colspan="3">
-                                <p align="center">
-                                    <font color="#804040" size="2"><strong>御
-                                            讃歌や御論文の英訳に参加してみませんか。<br> </strong></font>
-                                    <font size="2">詳しくは、</font><a href="filetop/english2.html">
-                                        <font size="2">英訳御讃歌のページ</font>
-                                    </a>
-                                    <font size="2">を
-                                        ご覧ください。<br> 投稿、感想は、サポート掲示板</font>
-                                    <font color="#008000" size="2"><strong> </strong></font><a href="../cgi/lin.cgi"
-                                        target="main">
-                                        <font color="#008000" face="Century" size="2"><strong>Lindenbaum</strong></font>
-                                    </a>
-                                    <font color="#000000" face="Century" size="2"> </font>
-                                    <font color="#000000" size="2">へどうぞ。<br> <br> </font>
-                                </p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </center>
-        </div>
-    </blockquote>
-    <blockquote>
-        <div align="center">
-            <center>
-                <table style="width: 85%;" border="0">
-                    <tbody>
-                        <tr>
-                            <td>
-                                <font face="HG丸ｺﾞｼｯｸM-PRO" size="2">更新日記</font>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p align="left">
-                                    <font size="2"><iframe src="koshin2.html" height="120" scrolling="auto"
-                                            width="100%"></iframe></font>
-                                </p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </center>
-        </div>
-    </blockquote>
-    <div align="center">
-        <center>
-            <table border="0">
-                <tbody>
-                    <tr>
-                        <td><a href="http://www.kiteya.net/script/msearch/" target="_blank">Search Engine</a></td>
-                        <td>
-                            <font size="2">　
-                                検索には </font>
-                            <font color="#008040" size="2"><strong>サ
-                                    イト内全文検索エンジン</strong></font>
-                            <font color="#008040"><strong>
-                                    mseach</strong></font>
-                            <font size="2"> を使用しています。</font>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </center>
-    </div>
-    <p align="center">
-        <font face="Century Gothic" size="2">rattail567@gmail.com<br>
-            <br>
-        </font>
-    </p>
+
+    <script>
+        let poems = [];
+        let currentIndex = 0;
+
+        async function loadPoems() {
+            try {
+                const response = await fetch('yamatomizu.json');
+                const data = await response.json();
+
+                poems = [];
+
+                function traverse(node) {
+                    if (node.level === 3 && node.content) {
+                        let poemData = {};
+                        let hasPoem = false;
+
+                        node.content.forEach(p => {
+                            if (!p.text) return;
+
+                            if (p.text.includes('御歌:')) {
+                                poemData.original = p.text.replace('御歌:', '').trim();
+                                hasPoem = true;
+                            } else if (p.text.includes('読み:')) {
+                                poemData.reading = p.text.replace('読み:', '').trim();
+                            } else if (p.text.includes('現代語意訳:')) {
+                                // Sometimes content is in the next object or same text line?
+                                // Based on previous view, it's usually "現代語意訳:" then text in next paragraph or same?
+                                // Let's simplify: regex or split.
+                                // The JSON view showed simple strings.
+                                // Actually, one sample showed: "text": "現代語意訳:" then next object "text": "「...」"
+                                // But looking at the logic, I need to capture the text *following* the label if it's separate, 
+                                // or the text *in* the same string.
+                                // Let's just store all texts and process or map them.
+                                // Actually, let's look for the specific prefixes.
+                                // Wait, the JSON view showed:
+                                // { "text": "現代語意訳:" }, { "text": "「...」" } 
+                                // So I need to be careful.
+                            }
+                        });
+
+                        // Let's refine parsing to be more robust by just grabbing all text arrays
+                        if (hasPoem) {
+                            // Re-parse content to get all fields accurately
+                            let currentLabel = null;
+
+                            node.content.forEach(p => {
+                                let t = p.text || "";
+                                if (t.includes('御歌:')) {
+                                    poemData.original = t.replace('御歌:', '').trim();
+                                } else if (t.includes('読み:')) {
+                                    poemData.reading = t.replace('読み:', '').trim();
+                                } else if (t.includes('現代語意訳:')) {
+                                    currentLabel = 'meaning';
+                                    poemData.meaning = t.replace('現代語意訳:', '').trim();
+                                } else if (t.includes('🍃 季語と風物:')) {
+                                    currentLabel = 'season';
+                                    poemData.season = t.replace('🍃 季語と風物:', '').trim();
+                                } else if (t.includes('🎵 言霊と調べ:')) {
+                                    currentLabel = 'melody';
+                                    poemData.melody = t.replace('🎵 言霊と調べ:', '').trim();
+                                } else if (t.includes('🏔️ 深層の教訓:')) {
+                                    currentLabel = 'lesson';
+                                    poemData.lesson = t.replace('🏔️ 深層の教訓:', '').trim();
+                                } else {
+                                    // Append to current label if it exists (for multi-paragraph content)
+                                    // Specifically for 'meaning' which was split in the JSON sample
+                                    if (currentLabel && t.trim().length > 0) {
+                                        poemData[currentLabel] = (poemData[currentLabel] || "") + " " + t.trim();
+                                    }
+                                }
+                            });
+
+                            poemData.id = node.title;
+                            poems.push(poemData);
+                        }
+                    }
+                }
+
+                if (data.data && Array.isArray(data.data)) {
+                    data.data.forEach(item => traverse(item));
+                }
+
+                if (poems.length > 0) {
+                    currentIndex = Math.floor(Math.random() * poems.length);
+                    renderPoem(currentIndex);
+                } else {
+                    document.getElementById('poem-display').innerHTML = '<p>No poems found.</p>';
+                }
+
+            } catch (error) {
+                console.error('Error loading poems:', error);
+                document.getElementById('poem-display').innerHTML = '<p>Error loading poems.</p>';
+            }
+        }
+
+        function renderPoem(index) {
+            const container = document.getElementById('poem-display');
+            const poem = poems[index];
+
+            container.classList.remove('fade-in');
+            void container.offsetWidth;
+            container.classList.add('fade-in');
+
+            let html = `
+                <div class="poem-header">
+                    <div class="poem-title">No. ${poem.id}</div>
+                    <div class="poem-text">${poem.original}</div>
+                    <div class="poem-reading">${poem.reading || ''}</div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function changePoem(direction) {
+            if (poems.length === 0) return;
+
+            currentIndex += direction;
+
+            if (currentIndex < 0) {
+                currentIndex = poems.length - 1;
+            } else if (currentIndex >= poems.length) {
+                currentIndex = 0;
+            }
+
+            renderPoem(currentIndex);
+        }
+
+        // Initialize
+        loadPoems();
+    </script>
 </body>
 
 </html>
